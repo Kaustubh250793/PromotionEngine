@@ -63,15 +63,10 @@ namespace PromotionEngineService.Controller
             int price = 0;
             foreach (var item in order.Items)
             {
-                price += GetPriceFromPriceList(item.SKU_Id) * item.Quantity;
+                price += _priceList.FirstOrDefault(x => x.SKU_Id == item.SKU_Id).UnitPrice * item.Quantity;
             }
 
             return price;
-        }
-
-        private int GetPriceFromPriceList(char id)
-        {
-            return _priceList.FirstOrDefault(x => x.SKU_Id == id)?.UnitPrice ?? 0;
         }
     }
 }
