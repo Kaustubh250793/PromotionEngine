@@ -7,12 +7,8 @@ Problem Statement : Promotion Engine We need you to implement a simple promotion
 
 git clone https://github.com/shegaon/PromotionEngine.git
 
-2.Build the solution in Visual Studio 20172019
+2.Build the solution in Visual Studio 20192019
 
-In case error- Check the NuGet package manager for updates to the installed packages
+In case of nuget error- Check the NuGet package manager for updates to the installed packages
 
 3.Run project
-
-
-
-# Please refer wiki Page for more details
