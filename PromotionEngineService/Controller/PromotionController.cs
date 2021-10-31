@@ -40,47 +40,26 @@ namespace PromotionEngineService.Controller
 
         private int CalculatePromotionPrice(Order order, Promotion promotion)
         {
-            var promotionItemsCountDict = new Dictionary<char, int>();
-
             var promotionItems = promotion.Items;
             int totalPrice = 0;
 
-            if (promotion.Items.All(x => order.Items.FirstOrDefault(p => p.SKU_Id == x.SKU_Id)?.Quantity >= x.Quantity))
+            if (!promotionItems.All(x => order.Items.FirstOrDefault(i => i.SKU_Id == x.SKU_Id)?.Quantity >= x.Quantity))
+            {
+                return 0;
+            }
+
+            while (order.Items.Where(p => promotionItems.Any(x => x.SKU_Id == p.SKU_Id)).Sum(q => q.Quantity)
+                >= promotionItems.Sum(x => x.Quantity))
             {
                 foreach (var item in promotionItems)
                 {
-                    var promotionItemQuantity = order.Items.FirstOrDefault(x => x.SKU_Id == item.SKU_Id).Quantity;
-
-                    promotionItemsCountDict.Add(item.SKU_Id, promotionItemQuantity);
+                    order.Items.FirstOrDefault(x => x.SKU_Id == item.SKU_Id).Quantity -= item.Quantity;
                 }
 
-                while (order.Items.Where(p => promotionItems.Any(x => x.SKU_Id == p.SKU_Id)).Sum(q => q.Quantity)
-                >= promotionItems.Sum(x => x.Quantity))
-                {
-                    totalPrice += promotion.TotalAmount;
-
-                    foreach (var item in promotionItems)
-                    {
-                        promotionItemsCountDict[item.SKU_Id] -= item.Quantity;
-                    }
-                }
-                foreach (var key in promotionItemsCountDict.Keys)
-                {
-                    var reomve = order.Items.FirstOrDefault(s => s.SKU_Id == key);
-                    order.Items.Remove(reomve);
-                }
-
-                promotionItemsCountDict.Keys.Select(x => order.Items.Remove(order.Items.FirstOrDefault(s => s.SKU_Id == x)));
-
-                foreach (var item in promotionItemsCountDict.Where(x => x.Value > 0))
-                {
-                    totalPrice += GetPriceFromPriceList(item.Key) * item.Value;
-                }
-
-                return totalPrice;
+                totalPrice += promotion.TotalAmount;
             }
 
-            return 0;
+            return totalPrice;
         }
 
         public int GetPriceFromPriceList(char id)
