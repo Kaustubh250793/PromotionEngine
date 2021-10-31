@@ -27,17 +27,6 @@ namespace PromotionEngineService.Controller
             return order.TotalAmount;
         }
 
-        private int CalculateRegularPrice(Order order)
-        {
-            int price = 0;
-            foreach (var item in order.Items)
-            {
-                price += GetPriceFromPriceList(item.SKU_Id) * item.Quantity;
-            }
-
-            return price;
-        }
-
         private int CalculatePromotionPrice(Order order, Promotion promotion)
         {
             var promotionItems = promotion.Items;
@@ -65,6 +54,17 @@ namespace PromotionEngineService.Controller
         public int GetPriceFromPriceList(char id)
         {
             return _priceList.FirstOrDefault(x => x.SKU_Id == id)?.UnitPrice ?? 0;
+        }
+
+        private int CalculateRegularPrice(Order order)
+        {
+            int price = 0;
+            foreach (var item in order.Items)
+            {
+                price += GetPriceFromPriceList(item.SKU_Id) * item.Quantity;
+            }
+
+            return price;
         }
     }
 }

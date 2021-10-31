@@ -92,8 +92,7 @@ namespace PromotionEngineService.UnitTests
         /// Scenario B
         /// 5 * A = 130 + 2*50
         /// 5 * B = 45 + 45 + 30
-        /// 1 * C = -
-        /// 1 * D = 30
+        /// 1 * C = 20
         //Total = 370 
         /// </summary>
         [Test]
@@ -107,8 +106,7 @@ namespace PromotionEngineService.UnitTests
                 {
                     new Product { SKU_Id = 'A', Quantity = 5 },
                     new Product { SKU_Id = 'B', Quantity = 5 },
-                    new Product { SKU_Id = 'C', Quantity = 1 },
-                    new Product { SKU_Id = 'D', Quantity = 1 }
+                    new Product { SKU_Id = 'C', Quantity = 1 }
                 }
               };
 
