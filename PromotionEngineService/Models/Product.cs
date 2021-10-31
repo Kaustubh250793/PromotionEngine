@@ -5,5 +5,7 @@
         public char SKU_Id { get; set; }
 
         public int Quantity { get; set; }
+
+        public bool IsPromotionApplied { get; set; }
     }
 }

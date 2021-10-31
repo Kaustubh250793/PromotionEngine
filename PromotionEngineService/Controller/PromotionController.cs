@@ -15,6 +15,11 @@ namespace PromotionEngineService.Controller
             _promotions = promotions;
         }
 
+        /// <summary>
+        /// Checkout with promotion
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns>total price</returns>
         public int CheckOutWithPromotion(Order order)
         {
             foreach (var promotion in _promotions)
@@ -22,7 +27,7 @@ namespace PromotionEngineService.Controller
                 order.TotalAmount += CalculatePromotionPrice(order, promotion);
             }
 
-            order.TotalAmount += CalculateRegularPrice(order);
+            order.TotalAmount += CalculateRegularPriceForRemainingItems(order);
 
             return order.TotalAmount;
         }
@@ -32,9 +37,10 @@ namespace PromotionEngineService.Controller
             var promotionItems = promotion.Items;
             int totalPrice = 0;
 
-            if (!promotionItems.All(x => order.Items.FirstOrDefault(i => i.SKU_Id == x.SKU_Id)?.Quantity >= x.Quantity))
+            if (!promotionItems
+                .All(x => order.Items.FirstOrDefault(i => i.SKU_Id == x.SKU_Id && !i.IsPromotionApplied)?.Quantity >= x.Quantity))
             {
-                return 0;
+                return totalPrice;
             }
 
             while (order.Items.Where(p => promotionItems.Any(x => x.SKU_Id == p.SKU_Id)).Sum(q => q.Quantity)
@@ -43,6 +49,7 @@ namespace PromotionEngineService.Controller
                 foreach (var item in promotionItems)
                 {
                     order.Items.FirstOrDefault(x => x.SKU_Id == item.SKU_Id).Quantity -= item.Quantity;
+                    order.Items.FirstOrDefault(x => x.SKU_Id == item.SKU_Id).IsPromotionApplied = true;
                 }
 
                 totalPrice += promotion.TotalAmount;
@@ -51,12 +58,7 @@ namespace PromotionEngineService.Controller
             return totalPrice;
         }
 
-        public int GetPriceFromPriceList(char id)
-        {
-            return _priceList.FirstOrDefault(x => x.SKU_Id == id)?.UnitPrice ?? 0;
-        }
-
-        private int CalculateRegularPrice(Order order)
+        private int CalculateRegularPriceForRemainingItems(Order order)
         {
             int price = 0;
             foreach (var item in order.Items)
@@ -65,6 +67,11 @@ namespace PromotionEngineService.Controller
             }
 
             return price;
+        }
+
+        private int GetPriceFromPriceList(char id)
+        {
+            return _priceList.FirstOrDefault(x => x.SKU_Id == id)?.UnitPrice ?? 0;
         }
     }
 }

@@ -22,28 +22,27 @@ namespace PromotionEngineService.UnitTests
 
             var promotions = new List<Promotion>
             {
+                // Promotion 1
                 new Promotion()
                 {
                     Items = new List<Product>()
                     {
-                        new Product()
-                        {
-                            SKU_Id = 'A', Quantity = 3
-                        }
+                        new Product() { SKU_Id = 'A', Quantity = 3 }
                     },
                     TotalAmount = 130
                 },
+
+                // Promotion 2
                 new Promotion()
                 {
                     Items = new List<Product>()
                     {
-                        new Product()
-                        {
-                            SKU_Id = 'B', Quantity = 2
-                        }
+                        new Product() { SKU_Id = 'B', Quantity = 2 }
                     },
                     TotalAmount = 45
                 },
+
+                // Promotion 3
                 new Promotion()
                 {
                     Items = new List<Product>()
@@ -52,7 +51,17 @@ namespace PromotionEngineService.UnitTests
                         new Product() {SKU_Id = 'D', Quantity = 1}
                     },
                     TotalAmount = 30
-                }
+                },
+
+                // Promotion for item A - Check for mutual exclusiveness
+                new Promotion()
+                {
+                    Items = new List<Product>()
+                    {
+                        new Product() { SKU_Id = 'A', Quantity = 2 }
+                    },
+                    TotalAmount = 110
+                },
             };
 
 
