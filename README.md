@@ -11,4 +11,4 @@ git clone https://github.com/shegaon/PromotionEngine.git
 
 In case of nuget error- Check the NuGet package manager for updates to the installed packages
 
-3.Run project
+3.Run test scenarios from PromotionControllerUnitTests.cs
