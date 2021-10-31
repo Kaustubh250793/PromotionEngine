@@ -54,7 +54,8 @@ namespace PromotionEngineService.Controller
                     promotionItemsCountDict.Add(item.SKU_Id, promotionItemQuantity);
                 }
 
-                while (promotionItemsCountDict.Values.Sum() >= promotionItems.Sum(x => x.Quantity))
+                while (order.Items.Where(p => promotionItems.Any(x => x.SKU_Id == p.SKU_Id)).Sum(q => q.Quantity)
+                >= promotionItems.Sum(x => x.Quantity))
                 {
                     totalPrice += promotion.TotalAmount;
 
