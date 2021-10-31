@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PromotionEngineService.Models
 {
-    class Order
+    public class Order
     {
+        public List<Product> Items { get; set; }
+
+        public int TotalAmount { get; set; }
     }
 }
